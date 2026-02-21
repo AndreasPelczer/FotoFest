@@ -13,8 +13,8 @@ import UIKit
 
 @Observable
 final class FirebaseService {
-    private lazy var db = Firestore.firestore()
-    private lazy var storage = Storage.storage()
+    private let db = Firestore.firestore()
+    private let storage = Storage.storage()
 
     // MARK: - Cached Data
 
@@ -63,9 +63,9 @@ final class FirebaseService {
                 self?.challenges = docs.compactMap { try? $0.data(as: FFChallenge.self) }
             }
 
-        // Timeline – sortiert nach time
+        // Timeline – sortiert nach sortOrder
         timelineListener = db.collection("\(eventPath)/timeline")
-            .order(by: "time")
+            .order(by: "sortOrder")
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let docs = snapshot?.documents else { return }
                 self?.timeline = docs.compactMap { try? $0.data(as: FFTimelineEntry.self) }

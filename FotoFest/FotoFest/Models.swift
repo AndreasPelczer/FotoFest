@@ -51,8 +51,9 @@ struct FFTimelineEntry: Identifiable, Codable {
     @DocumentID var id: String?
     var time: String                  // z.B. "13:00"
     var title: String
-    var icon: String                  // SF Symbol Name
-    var isActive: Bool = false
+    var iconName: String              // SF Symbol Name (Firestore: "iconName")
+    var isHighlighted: Bool = false   // Firestore: "isHighlighted"
+    var sortOrder: Int = 0            // Firestore: "sortOrder"
 }
 
 // MARK: - Guest
