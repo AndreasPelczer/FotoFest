@@ -131,7 +131,7 @@ final class FirebaseService {
             .addDocument(from: photo)
 
         // 7. Foto-Zähler beim Gast erhöhen
-        db.collection("\(eventPath)/guests")
+        try await db.collection("\(eventPath)/guests")
             .document(userId)
             .updateData(["photoCount": FieldValue.increment(Int64(1))])
 
