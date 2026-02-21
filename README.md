@@ -1,95 +1,109 @@
 # FotoFest 📸
 
-**Die Event-Foto-App – gebaut mit Liebe für Jasmin & Andreas**
+**Hochzeits-Foto-App für Jasmin & Andreas · 16. Mai 2026**
 
-Eine native iOS-App (SwiftUI) + Begleit-Webseite, mit der Hochzeitsgäste ihre Fotos in Echtzeit in einer gemeinsamen Galerie teilen können.
+Eine native iOS-App + Begleit-Webseite, mit der Gäste ihre Fotos in Echtzeit in einer gemeinsamen Galerie teilen – in Originalqualität, ohne WhatsApp-Komprimierung.
 
-## 🎯 Features
+## Status
 
-- **Gemeinsame Foto-Galerie** – Alle Gäste sehen alle Fotos in Echtzeit
-- **Foto-Challenges** – Lustige Aufgaben bringen Gäste zusammen
-- **Tagesablauf** – Live-Timeline mit aktuellem Programmpunkt
-- **QR-Code-Zugang** – Kein Account nötig, einfach scannen und mitmachen
-- **Originalqualität** – Keine Komprimierung wie bei WhatsApp
-- **Web-Fallback** – Für Android-Gäste und Desktop
+| Komponente | Status |
+|---|---|
+| Firebase Backend | ✅ Live (Firestore, Storage, Auth, Hosting) |
+| Webseite | ✅ Live → [meineapp-99d5b.web.app](https://meineapp-99d5b.web.app) |
+| Datenbank | ✅ Befüllt (Event, Timeline, Challenges) |
+| iOS-App UI | 🔧 Grundstruktur vorhanden, Firebase-Anbindung offen |
+| TestFlight | ⏳ Geplant bis 2. Mai |
 
-## 🏗 Architektur
+## Features
+
+- **Gemeinsame Foto-Galerie** – Echtzeit-Updates via Firestore
+- **8 Foto-Challenges** – Selfie mit Brautpaar, bestes Essen, lustigster Moment...
+- **Tagesablauf** – Live-Timeline von 13:00 bis 00:00
+- **QR-Code-Zugang** – Kein Account nötig, Event-Code `jasmin1605`
+- **Web-Fallback** – Upload + Galerie für Android-Gäste
+
+## Tech Stack
+
+| | Technologie |
+|---|---|
+| **iOS** | Swift 5.9+, SwiftUI, iOS 17+ |
+| **Backend** | Firebase (Firestore, Storage, Auth) |
+| **Webseite** | HTML/CSS/JS + Firebase JS SDK |
+| **Fonts** | Great Vibes (Display), Nunito (Web), System Rounded (iOS) |
+| **Distribution** | TestFlight |
+
+## Projektstruktur
 
 ```
 FotoFest/
-├── App/                    # App Entry Point, Tab Navigation
+├── App/
+│   ├── FotoFestApp.swift           # Entry Point + AppState
+│   └── MainTabView.swift           # Tab Bar + Floating Camera
 ├── Core/
-│   ├── Design/             # Design System (Farben, Typo, Components)
-│   ├── Models/             # Datenmodelle (Event, Photo, Challenge...)
-│   ├── Services/           # Firebase, Kamera, Storage
-│   └── Extensions/         # Swift Extensions
-├── Features/
-│   ├── Welcome/            # Login / QR-Code Scanner
-│   ├── Gallery/            # Foto-Grid mit Echtzeit-Updates
-│   ├── Camera/             # Kamera + Upload
-│   ├── Challenges/         # Foto-Aufgaben
-│   ├── Timeline/           # Tagesablauf
-│   ├── PhotoDetail/        # Vollbild-Ansicht
-│   └── Settings/           # Profil, Info, Abmelden
-└── Resources/              # Assets, Fonts, Config
+│   ├── Design/DesignSystem.swift   # Farben, Typo, Buttons, Cards
+│   └── Models/Models.swift         # Datenmodelle + Demo-Daten
+└── Features/
+    ├── Welcome/                    # Login + QR-Scanner
+    ├── Gallery/                    # Foto-Grid
+    ├── Camera/                     # Kamera + Upload
+    ├── Challenges/                 # Foto-Aufgaben
+    ├── Timeline/                   # Tagesablauf
+    ├── PhotoDetail/                # Vollbild-Ansicht
+    └── Settings/                   # Profil + Info
 ```
 
-## 🎨 Design System
+## Firebase
 
-Farbpalette extrahiert aus der Hochzeitswebsite (WeddyBird):
+| Service | Projekt-ID | Region |
+|---|---|---|
+| Firestore | `meineapp-99d5b` | europe-west3 |
+| Storage | `meineapp-99d5b.appspot.com` | europe-west3 |
+| Hosting | `meineapp-99d5b.web.app` | – |
+| Auth | Anonym + E-Mail/Passwort | – |
+| Bundle-ID (iOS) | `io.imops.FotoFest` | – |
+
+## Design System
+
+Farbpalette extrahiert aus der Hochzeitswebsite ([WeddyBird](https://jasmin-andreas-1605.weddybird.com)):
 
 | Farbe | Hex | Verwendung |
-|-------|-----|------------|
+|---|---|---|
 | Dusty Rose | `#C9A0A0` | Primärakzent, Buttons |
-| Rose Soft | `#E8C4C4` | Hintergrund-Akzent |
+| Rose Soft | `#E8C4C4` | Hintergrund-Akzent, Icon-Kreise |
 | Peach | `#D9A08E` | Sekundärakzent |
-| Sage | `#8A9A7E` | Erfolg, Akzent |
+| Sage | `#8A9A7E` | Erfolg, Tertiärakzent |
 | Cream | `#FAF7F4` | Seitenhintergrund |
+| Text Primary | `#3C2A2A` | Überschriften |
 
-Font: *Great Vibes* (Google Fonts) für Display, System Rounded für Body.
+## Setup
 
-## 🛠 Tech Stack
+### iOS-App
+1. Repo klonen
+2. `GoogleService-Info.plist` in `FotoFest/Resources/` legen (beim Owner anfragen)
+3. [Great Vibes](https://fonts.google.com/specimen/Great+Vibes) Font herunterladen → `Resources/`
+4. In Xcode: SPM Packages hinzufügen (`firebase-ios-sdk`)
+5. `Cmd+R`
 
-- **iOS**: Swift 5.9+, SwiftUI, iOS 17+
-- **Backend**: Firebase (Firestore, Storage, Auth)
-- **Webseite**: HTML/CSS/JS + Firebase JS SDK
-- **Distribution**: TestFlight (bis 10.000 Tester)
-- **Packages**:
-  - `firebase-ios-sdk`
-  - `SDWebImageSwiftUI` (Async Image Loading)
-  - `CodeScanner` (QR-Code)
-
-## 🚀 Setup
-
-### 1. Firebase einrichten
-1. Neues Firebase-Projekt erstellen
-2. iOS-App registrieren (Bundle ID: `de.binda.FotoFest`)
-3. `GoogleService-Info.plist` herunterladen → in `Resources/` legen
-4. Firestore, Storage und Auth aktivieren
-
-### 2. Xcode
+### Webseite
 ```bash
-git clone https://github.com/[dein-username]/FotoFest.git
-cd FotoFest
-open FotoFest.xcodeproj
+cd fotofest-web
+firebase deploy
 ```
 
-### 3. Font installieren
-1. [Great Vibes](https://fonts.google.com/specimen/Great+Vibes) herunterladen
-2. `GreatVibes-Regular.ttf` in `Resources/` legen
-3. In Info.plist unter "Fonts provided by application" eintragen
+## Zeitplan
 
-## 📅 Timeline
+| Phase | Bis | Was |
+|---|---|---|
+| ~~Phase 1~~ | ~~7. März~~ | ✅ Firebase, Projektstruktur, Design System, Webseite |
+| Phase 2 | 28. März | Kamera, Upload, Live-Galerie, Challenges |
+| Phase 3 | 18. April | Polish, Thumbnails, Animations |
+| Phase 4 | 2. Mai | TestFlight, Beta-Test |
+| Phase 5 | 16. Mai | 🎉 **Hochzeitstag** |
 
-- **Phase 1** (bis 7. März): Grundstruktur, Firebase, Auth
-- **Phase 2** (bis 28. März): Kamera, Galerie, Challenges
-- **Phase 3** (bis 18. April): Polish, Webseite, ZIP-Download
-- **Phase 4** (bis 2. Mai): TestFlight, Beta-Test
-- **Phase 5** (16. Mai): 🎉 Hochzeitstag!
+## Dokumentation
 
-## 📝 Lizenz
-
-Privates Projekt. Erstellt als Geschenk für Jasmin & Andreas.
+- [`DEVELOPER_BRIEFING.md`](DEVELOPER_BRIEFING.md) – Technisches Briefing für Entwickler
+- Firebase Console: [console.firebase.google.com/project/meineapp-99d5b](https://console.firebase.google.com/project/meineapp-99d5b)
 
 ---
 
