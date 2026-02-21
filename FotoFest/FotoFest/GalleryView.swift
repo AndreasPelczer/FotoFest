@@ -2,15 +2,16 @@
 //  GalleryView.swift
 //  FotoFest
 //
-//  Foto-Galerie – zeigt alle hochgeladenen Fotos.
-//  Wird später mit Firebase Storage + Firestore Listener befüllt.
+//  Foto-Galerie mit Echtzeit-Firestore-Listener und Kamera-Button.
 //
 
 import SwiftUI
 
 struct GalleryView: View {
-    let guestName: String
-    @State private var photos: [Photo] = []
+    @Environment(AppState.self) private var appState
+    @Environment(FirebaseService.self) private var firebase
+    @State private var showCamera = false
+    @State private var selectedPhoto: FFPhoto?
 
     private let columns = [
         GridItem(.flexible(), spacing: 2),
@@ -23,13 +24,26 @@ struct GalleryView: View {
             ZStack {
                 Color.ivory.ignoresSafeArea()
 
-                if photos.isEmpty {
+                if firebase.photos.isEmpty {
                     emptyState
                 } else {
                     ScrollView {
+                        // Foto-Statistik
+                        HStack {
+                            Label("\(firebase.photos.count) Fotos", systemImage: "photo.fill")
+                                .font(.caption)
+                                .foregroundColor(.darkBrown.opacity(0.6))
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+
                         LazyVGrid(columns: columns, spacing: 2) {
-                            ForEach(photos) { photo in
+                            ForEach(firebase.photos) { photo in
                                 PhotoThumbnail(photo: photo)
+                                    .onTapGesture {
+                                        selectedPhoto = photo
+                                    }
                             }
                         }
                     }
@@ -40,7 +54,7 @@ struct GalleryView: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Button(action: openCamera) {
+                        Button { showCamera = true } label: {
                             Image(systemName: "camera.fill")
                                 .font(.title2)
                                 .foregroundColor(.white)
@@ -57,6 +71,12 @@ struct GalleryView: View {
             .navigationTitle("Galerie")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.ivory, for: .navigationBar)
+            .sheet(isPresented: $showCamera) {
+                CameraView()
+            }
+            .fullScreenCover(item: $selectedPhoto) { photo in
+                PhotoDetailView(photo: photo)
+            }
         }
     }
 
@@ -76,23 +96,41 @@ struct GalleryView: View {
                 .multilineTextAlignment(.center)
         }
     }
-
-    private func openCamera() {
-        // TODO: Kamera-Integration + Upload
-    }
 }
 
 // MARK: - Thumbnail
 
 struct PhotoThumbnail: View {
-    let photo: Photo
+    let photo: FFPhoto
 
     var body: some View {
+        let url = URL(string: photo.thumbnailURL ?? photo.storageURL)
+
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .aspectRatio(1, contentMode: .fill)
+                    .clipped()
+            case .failure:
+                placeholder
+            case .empty:
+                placeholder
+                    .overlay { ProgressView().tint(.dustyRose) }
+            @unknown default:
+                placeholder
+            }
+        }
+        .aspectRatio(1, contentMode: .fit)
+    }
+
+    private var placeholder: some View {
         Rectangle()
             .fill(Color.softPink.opacity(0.3))
-            .aspectRatio(1, contentMode: .fit)
             .overlay {
-                // Platzhalter – wird durch AsyncImage/Kingfisher ersetzt
                 Image(systemName: "photo")
                     .foregroundColor(.dustyRose)
             }
@@ -100,5 +138,7 @@ struct PhotoThumbnail: View {
 }
 
 #Preview {
-    GalleryView(guestName: "Andreas")
+    GalleryView()
+        .environment(AppState())
+        .environment(FirebaseService())
 }

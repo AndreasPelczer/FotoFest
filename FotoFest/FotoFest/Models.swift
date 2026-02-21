@@ -2,17 +2,30 @@
 //  Models.swift
 //  FotoFest
 //
-//  Datenmodell – bildet die Firestore-Dokumentstruktur ab.
-//  Wird später mit FirebaseFirestoreSwift (@DocumentID, Codable) erweitert.
+//  Datenmodell – bildet die Firestore-Dokumentstruktur 1:1 ab.
+//  Nutzt @DocumentID aus FirebaseFirestore für automatisches ID-Mapping.
 //
 
 import Foundation
+import FirebaseFirestore
+
+// MARK: - Event
+
+struct FFEvent: Identifiable, Codable {
+    @DocumentID var id: String?
+    var eventCode: String
+    var name: String
+    var date: String                  // ISO-8601 String aus Firestore
+    var primaryColor: String?
+    var accentColor: String?
+}
 
 // MARK: - Photo
 
-struct Photo: Identifiable, Codable {
-    var id: String = UUID().uuidString
-    var uploadedBy: String
+struct FFPhoto: Identifiable, Codable {
+    @DocumentID var id: String?
+    var uploadedBy: String            // Auth UID
+    var guestName: String?
     var timestamp: Date
     var storageURL: String
     var thumbnailURL: String?
@@ -25,37 +38,28 @@ struct Photo: Identifiable, Codable {
 
 // MARK: - Challenge
 
-struct Challenge: Identifiable, Codable {
-    var id: String = UUID().uuidString
+struct FFChallenge: Identifiable, Codable {
+    @DocumentID var id: String?
     var title: String
-    var icon: String              // SF Symbol Name
+    var iconName: String              // SF Symbol Name (Firestore-Feldname)
     var completedBy: [String] = []
 }
 
 // MARK: - TimelineEntry
 
-struct TimelineEntry: Identifiable, Codable {
-    var id: String = UUID().uuidString
-    var time: String              // z.B. "13:00"
+struct FFTimelineEntry: Identifiable, Codable {
+    @DocumentID var id: String?
+    var time: String                  // z.B. "13:00"
     var title: String
-    var icon: String              // SF Symbol Name
+    var icon: String                  // SF Symbol Name
     var isActive: Bool = false
 }
 
 // MARK: - Guest
 
-struct Guest: Identifiable, Codable {
-    var id: String = UUID().uuidString
+struct FFGuest: Identifiable, Codable {
+    @DocumentID var id: String?
     var name: String
     var deviceId: String
     var photoCount: Int = 0
-}
-
-// MARK: - Event
-
-struct Event: Identifiable, Codable {
-    var id: String = UUID().uuidString
-    var eventCode: String
-    var eventDate: Date
-    var eventName: String
 }

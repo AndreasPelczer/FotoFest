@@ -2,31 +2,48 @@
 //  ChallengesView.swift
 //  FotoFest
 //
-//  Foto-Challenges / Aufgaben für die Gäste
+//  Foto-Challenges aus Firestore – Aufgaben für die Gäste
 //
 
 import SwiftUI
 
 struct ChallengesView: View {
-    @State private var challenges: [Challenge] = Challenge.defaults
+    @Environment(AppState.self) private var appState
+    @Environment(FirebaseService.self) private var firebase
+    @State private var showCamera = false
+    @State private var selectedChallenge: FFChallenge?
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.ivory.ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(challenges) { challenge in
-                            ChallengeRow(challenge: challenge)
+                if firebase.challenges.isEmpty {
+                    ProgressView("Challenges laden…")
+                        .tint(.dustyRose)
+                } else {
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            ForEach(firebase.challenges) { challenge in
+                                ChallengeRow(
+                                    challenge: challenge,
+                                    userId: appState.userId
+                                ) {
+                                    selectedChallenge = challenge
+                                    showCamera = true
+                                }
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .navigationTitle("Challenges")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.ivory, for: .navigationBar)
+            .sheet(isPresented: $showCamera) {
+                CameraView(preselectedChallenge: selectedChallenge)
+            }
         }
     }
 }
@@ -34,19 +51,26 @@ struct ChallengesView: View {
 // MARK: - Row
 
 struct ChallengeRow: View {
-    let challenge: Challenge
+    let challenge: FFChallenge
+    let userId: String?
+    let onCapture: () -> Void
 
-    var isCompleted: Bool {
-        !challenge.completedBy.isEmpty
+    var isCompletedByMe: Bool {
+        guard let userId else { return false }
+        return challenge.completedBy.contains(userId)
+    }
+
+    var completionCount: Int {
+        challenge.completedBy.count
     }
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: challenge.icon)
+            Image(systemName: challenge.iconName)
                 .font(.title3)
                 .foregroundColor(.white)
                 .frame(width: 48, height: 48)
-                .background(isCompleted ? Color.sageDarkGreen : Color.dustyRose)
+                .background(isCompletedByMe ? Color.sageDarkGreen : Color.dustyRose)
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 4) {
@@ -54,8 +78,8 @@ struct ChallengeRow: View {
                     .font(.body)
                     .foregroundColor(.darkBrown)
 
-                if isCompleted {
-                    Text("\(challenge.completedBy.count) erledigt")
+                if completionCount > 0 {
+                    Text("\(completionCount)× erledigt")
                         .font(.caption)
                         .foregroundColor(.sageDarkGreen)
                 }
@@ -63,9 +87,17 @@ struct ChallengeRow: View {
 
             Spacer()
 
-            if isCompleted {
+            if isCompletedByMe {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.sageDarkGreen)
+            } else {
+                Button { onCapture() } label: {
+                    Image(systemName: "camera.fill")
+                        .foregroundColor(.dustyRose)
+                        .frame(width: 36, height: 36)
+                        .background(Color.dustyRose.opacity(0.12))
+                        .clipShape(Circle())
+                }
             }
         }
         .padding()
@@ -74,21 +106,8 @@ struct ChallengeRow: View {
     }
 }
 
-// MARK: - Default Challenges
-
-extension Challenge {
-    static let defaults: [Challenge] = [
-        Challenge(title: "Mach ein Selfie mit dem Brautpaar", icon: "person.2.fill"),
-        Challenge(title: "Fotografiere den schönsten Blumenstrauß", icon: "camera.macro"),
-        Challenge(title: "Fang einen lustigen Moment auf der Tanzfläche ein", icon: "figure.dance"),
-        Challenge(title: "Zeig uns dein Outfit", icon: "tshirt.fill"),
-        Challenge(title: "Wer hat die verrücktesten Schuhe?", icon: "shoe.fill"),
-        Challenge(title: "Fotografiere den ältesten Gast", icon: "person.fill"),
-        Challenge(title: "Das beste Essen des Abends", icon: "fork.knife"),
-        Challenge(title: "Der schönste Moment der Trauung", icon: "heart.fill"),
-    ]
-}
-
 #Preview {
     ChallengesView()
+        .environment(AppState())
+        .environment(FirebaseService())
 }

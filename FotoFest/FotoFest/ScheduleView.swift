@@ -1,27 +1,33 @@
 //
-//  TimelineView.swift
+//  ScheduleView.swift
 //  FotoFest
 //
-//  Tagesablauf – Nachbildung der WeddyBird-Timeline
+//  Tagesablauf aus Firestore – Nachbildung der WeddyBird-Timeline.
+//  (Umbenannt von TimelineView, um Namenskollision mit SwiftUI zu vermeiden.)
 //
 
 import SwiftUI
 
-struct TimelineView: View {
-    @State private var entries: [TimelineEntry] = TimelineEntry.defaults
+struct ScheduleView: View {
+    @Environment(FirebaseService.self) private var firebase
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.ivory.ignoresSafeArea()
 
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
-                            TimelineRow(entry: entry, isLast: index == entries.count - 1)
+                if firebase.timeline.isEmpty {
+                    ProgressView("Ablauf laden…")
+                        .tint(.dustyRose)
+                } else {
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(Array(firebase.timeline.enumerated()), id: \.element.id) { index, entry in
+                                ScheduleRow(entry: entry, isLast: index == firebase.timeline.count - 1)
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .navigationTitle("Ablauf")
@@ -33,8 +39,8 @@ struct TimelineView: View {
 
 // MARK: - Row
 
-struct TimelineRow: View {
-    let entry: TimelineEntry
+struct ScheduleRow: View {
+    let entry: FFTimelineEntry
     let isLast: Bool
 
     var body: some View {
@@ -86,20 +92,7 @@ struct TimelineRow: View {
     }
 }
 
-// MARK: - Default Timeline
-
-extension TimelineEntry {
-    static let defaults: [TimelineEntry] = [
-        TimelineEntry(time: "13:00", title: "Ankunft der Gäste", icon: "car.fill"),
-        TimelineEntry(time: "13:30", title: "Freie Trauung", icon: "heart.fill", isActive: false),
-        TimelineEntry(time: "14:30", title: "Sektempfang und Gratulation", icon: "wineglass.fill"),
-        TimelineEntry(time: "16:00", title: "Kaffee und Kuchen", icon: "cup.and.saucer.fill"),
-        TimelineEntry(time: "18:00", title: "Abendessen", icon: "fork.knife"),
-        TimelineEntry(time: "21:00", title: "Hochzeitstanz & Party", icon: "figure.dance"),
-        TimelineEntry(time: "00:00", title: "Ende der Feier", icon: "moon.stars.fill"),
-    ]
-}
-
 #Preview {
-    TimelineView()
+    ScheduleView()
+        .environment(FirebaseService())
 }

@@ -2,28 +2,17 @@
 //  WelcomeView.swift
 //  FotoFest
 //
-//  Login-Screen: Event-Code + Gastname eingeben
+//  Login-Screen: Event-Code + Gastname eingeben → Firebase Auth
 //
 
 import SwiftUI
 
 struct WelcomeView: View {
+    @Environment(AppState.self) private var appState
     @State private var eventCode = ""
     @State private var guestName = ""
-    @State private var isLoggedIn = false
-    @State private var showError = false
-
-    private let validEventCode = "jasmin1605"
 
     var body: some View {
-        if isLoggedIn {
-            MainTabView(guestName: guestName)
-        } else {
-            loginContent
-        }
-    }
-
-    private var loginContent: some View {
         ZStack {
             Color.ivory.ignoresSafeArea()
 
@@ -87,18 +76,30 @@ struct WelcomeView: View {
                     }
                     .padding(.horizontal, 40)
 
-                    if showError {
-                        Text("Ungültiger Event-Code")
+                    // Fehler-Anzeige
+                    if let error = appState.errorMessage {
+                        Text(error)
                             .font(.caption)
                             .foregroundColor(.red)
+                            .transition(.opacity)
                     }
 
                     // Login-Button
-                    Button("Eintreten") {
-                        login()
+                    Button {
+                        Task {
+                            await appState.joinEvent(code: eventCode, name: guestName)
+                        }
+                    } label: {
+                        HStack {
+                            if appState.isLoading {
+                                ProgressView()
+                                    .tint(.white)
+                            }
+                            Text(appState.isLoading ? "Verbinde…" : "Eintreten")
+                        }
                     }
                     .buttonStyle(.dustyRose)
-                    .disabled(eventCode.isEmpty || guestName.isEmpty)
+                    .disabled(eventCode.isEmpty || guestName.isEmpty || appState.isLoading)
                     .opacity(eventCode.isEmpty || guestName.isEmpty ? 0.5 : 1.0)
 
                     Spacer()
@@ -106,18 +107,9 @@ struct WelcomeView: View {
             }
         }
     }
-
-    private func login() {
-        if eventCode.lowercased() == validEventCode {
-            withAnimation {
-                isLoggedIn = true
-            }
-        } else {
-            showError = true
-        }
-    }
 }
 
 #Preview {
     WelcomeView()
+        .environment(AppState())
 }

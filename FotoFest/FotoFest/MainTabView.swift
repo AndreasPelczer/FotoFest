@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct MainTabView: View {
-    let guestName: String
-
     var body: some View {
         TabView {
-            GalleryView(guestName: guestName)
+            GalleryView()
                 .tabItem {
                     Label("Galerie", systemImage: "photo.on.rectangle.angled")
                 }
@@ -22,12 +20,12 @@ struct MainTabView: View {
                     Label("Challenges", systemImage: "target")
                 }
 
-            TimelineView()
+            ScheduleView()
                 .tabItem {
                     Label("Ablauf", systemImage: "clock")
                 }
 
-            SettingsView(guestName: guestName)
+            SettingsView()
                 .tabItem {
                     Label("Mehr", systemImage: "ellipsis")
                 }
@@ -37,5 +35,7 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView(guestName: "Andreas")
+    MainTabView()
+        .environment(AppState())
+        .environment(FirebaseService())
 }

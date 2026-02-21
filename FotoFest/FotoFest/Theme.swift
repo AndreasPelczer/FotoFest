@@ -13,7 +13,7 @@ extension Color {
     /// Zartes Rosa – Hintergrund-Akzent, Icons
     static let softPink = Color(hex: "E8C4C4")
     /// Dusty Rose – Primärfarbe, Buttons, Icon-Kreise
-    static let dustyRose = Color(hex: "D4A0A0")
+    static let dustyRose = Color(hex: "C9A0A0")
     /// Lachs/Peach – Akzentfarbe
     static let peach = Color(hex: "D9A08E")
     /// Salbeigrün hell – Akzentfarbe

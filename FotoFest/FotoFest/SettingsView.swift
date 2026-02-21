@@ -2,13 +2,15 @@
 //  SettingsView.swift
 //  FotoFest
 //
-//  Mehr-Tab: Gastname, Info, Downloads
+//  Mehr-Tab: Gastprofil, Event-Info, Abmelden
 //
 
 import SwiftUI
 
 struct SettingsView: View {
-    let guestName: String
+    @Environment(AppState.self) private var appState
+    @Environment(FirebaseService.self) private var firebase
+    @State private var showSignOutConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -16,13 +18,14 @@ struct SettingsView: View {
                 Color.ivory.ignoresSafeArea()
 
                 List {
+                    // Gast-Profil
                     Section {
                         HStack {
                             Image(systemName: "person.circle.fill")
                                 .font(.title)
                                 .foregroundColor(.dustyRose)
                             VStack(alignment: .leading) {
-                                Text(guestName)
+                                Text(appState.guestName)
                                     .font(.headline)
                                     .foregroundColor(.darkBrown)
                                 Text("Gast")
@@ -33,16 +36,32 @@ struct SettingsView: View {
                         .listRowBackground(Color.white)
                     }
 
+                    // Event-Infos (aus Firestore)
                     Section("Event") {
-                        Label("Jasmin & Andreas", systemImage: "heart.fill")
-                            .foregroundColor(.darkBrown)
-                        Label("16. Mai 2026", systemImage: "calendar")
-                            .foregroundColor(.darkBrown)
-                        Label("Event-Code: jasmin1605", systemImage: "key.fill")
+                        if let event = appState.currentEvent {
+                            Label(event.name, systemImage: "heart.fill")
+                                .foregroundColor(.darkBrown)
+                            Label(formatDate(event.date), systemImage: "calendar")
+                                .foregroundColor(.darkBrown)
+                        }
+                        Label("Event-Code: \(appState.eventCode)", systemImage: "key.fill")
                             .foregroundColor(.darkBrown)
                     }
                     .listRowBackground(Color.white)
 
+                    // Statistiken
+                    Section("Statistiken") {
+                        Label("\(firebase.photos.count) Fotos insgesamt", systemImage: "photo.fill")
+                            .foregroundColor(.darkBrown)
+                        Label(
+                            "\(firebase.photos.filter { $0.uploadedBy == appState.userId }.count) eigene Fotos",
+                            systemImage: "camera.fill"
+                        )
+                        .foregroundColor(.darkBrown)
+                    }
+                    .listRowBackground(Color.white)
+
+                    // Info
                     Section("Info") {
                         Label("Version 1.0", systemImage: "info.circle")
                             .foregroundColor(.darkBrown)
@@ -50,16 +69,49 @@ struct SettingsView: View {
                             .foregroundColor(.darkBrown)
                     }
                     .listRowBackground(Color.white)
+
+                    // Abmelden
+                    Section {
+                        Button(role: .destructive) {
+                            showSignOutConfirmation = true
+                        } label: {
+                            Label("Abmelden", systemImage: "rectangle.portrait.and.arrow.right")
+                        }
+                        .listRowBackground(Color.white)
+                    }
                 }
                 .scrollContentBackground(.hidden)
             }
             .navigationTitle("Mehr")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.ivory, for: .navigationBar)
+            .alert("Abmelden?", isPresented: $showSignOutConfirmation) {
+                Button("Abmelden", role: .destructive) {
+                    firebase.stopAll()
+                    appState.signOut()
+                }
+                Button("Abbrechen", role: .cancel) {}
+            } message: {
+                Text("Du kannst dich jederzeit mit dem Event-Code wieder anmelden.")
+            }
         }
+    }
+
+    private func formatDate(_ isoString: String) -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate, .withTime, .withColonSeparatorInTime, .withTimeZone]
+        if let date = formatter.date(from: isoString) {
+            let displayFormatter = DateFormatter()
+            displayFormatter.locale = Locale(identifier: "de_DE")
+            displayFormatter.dateStyle = .long
+            return displayFormatter.string(from: date)
+        }
+        return isoString
     }
 }
 
 #Preview {
-    SettingsView(guestName: "Andreas")
+    SettingsView()
+        .environment(AppState())
+        .environment(FirebaseService())
 }
