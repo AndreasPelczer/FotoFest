@@ -15,7 +15,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        FirebaseApp.configure()
         return true
     }
 }
@@ -27,7 +26,12 @@ struct FotoFestApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     @State private var appState = AppState()
-    @State private var firebaseService = FirebaseService()
+    @State private var firebaseService: FirebaseService
+
+    init() {
+        FirebaseApp.configure()
+        _firebaseService = State(initialValue: FirebaseService())
+    }
 
     var body: some Scene {
         WindowGroup {

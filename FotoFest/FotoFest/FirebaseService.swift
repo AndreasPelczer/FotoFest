@@ -13,8 +13,8 @@ import UIKit
 
 @Observable
 final class FirebaseService {
-    private lazy var db = Firestore.firestore()
-    private lazy var storage = Storage.storage()
+    private let db = Firestore.firestore()
+    private let storage = Storage.storage()
 
     // MARK: - Cached Data
 
