@@ -48,10 +48,10 @@ struct ScheduleRow: View {
             // Zeitachse (Linie + Punkt)
             VStack(spacing: 0) {
                 Circle()
-                    .fill(entry.isActive ? Color.dustyRose : Color.softPink)
+                    .fill(entry.isHighlighted ? Color.dustyRose : Color.softPink)
                     .frame(width: 14, height: 14)
                     .overlay {
-                        if entry.isActive {
+                        if entry.isHighlighted {
                             Circle()
                                 .stroke(Color.dustyRose.opacity(0.3), lineWidth: 4)
                                 .frame(width: 22, height: 22)
@@ -66,11 +66,11 @@ struct ScheduleRow: View {
             }
 
             // Icon
-            Image(systemName: entry.icon)
+            Image(systemName: entry.iconName)
                 .font(.body)
                 .foregroundColor(.white)
                 .frame(width: 40, height: 40)
-                .background(entry.isActive ? Color.dustyRose : Color.softPink)
+                .background(entry.isHighlighted ? Color.dustyRose : Color.softPink)
                 .clipShape(Circle())
 
             // Text
@@ -83,7 +83,7 @@ struct ScheduleRow: View {
                 Text(entry.title)
                     .font(.body)
                     .foregroundColor(.darkBrown)
-                    .fontWeight(entry.isActive ? .semibold : .regular)
+                    .fontWeight(entry.isHighlighted ? .semibold : .regular)
             }
 
             Spacer()
