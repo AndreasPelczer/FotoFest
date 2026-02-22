@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoFest · Info für Daniel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ff-rose: #C9A0A0;
+            --ff-rose-soft: #E8C4C4;
+            --ff-rose-dark: #A07878;
+            --ff-peach: #D9A08E;
+            --ff-sage: #8A9A7E;
+            --ff-cream: #FAF7F4;
+            --ff-white: #FFFEFB;
+            --ff-text: #3C2A2A;
+            --ff-text-light: #5C4A4A;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--ff-cream);
+            color: var(--ff-text-light);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 48px 0 40px;
+        }
+        .hero h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            color: var(--ff-text);
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .hero .subtitle {
+            font-size: 0.95rem;
+            color: var(--ff-rose);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .divider {
+            width: 60px;
+            height: 1.5px;
+            background: var(--ff-rose-soft);
+            margin: 24px auto;
+        }
+        /* Greeting */
+        .greeting {
+            background: var(--ff-white);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(201, 160, 160, 0.15);
+        }
+        .greeting p {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+        }
+        .greeting p:last-child { margin-bottom: 0; }
+        /* Section Cards */
+        .section {
+            background: var(--ff-white);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(201, 160, 160, 0.15);
+        }
+        .section h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: var(--ff-text);
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        .section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--ff-text);
+            margin: 20px 0 8px;
+        }
+        .section h3:first-of-type { margin-top: 8px; }
+        .section p, .section li {
+            font-size: 0.95rem;
+            color: var(--ff-text-light);
+            margin-bottom: 8px;
+        }
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .section ul li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .section ul li::before {
+            content: '\2661';
+            position: absolute;
+            left: 0;
+            color: var(--ff-rose);
+            font-size: 0.85rem;
+        }
+        /* Highlight Box */
+        .highlight {
+            background: linear-gradient(135deg, rgba(232, 196, 196, 0.2), rgba(217, 160, 142, 0.15));
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 16px 0;
+            border-left: 3px solid var(--ff-rose);
+        }
+        .highlight p {
+            font-size: 0.93rem;
+            margin-bottom: 6px;
+        }
+        .highlight strong {
+            color: var(--ff-text);
+        }
+        /* Warning Box */
+        .warning {
+            background: linear-gradient(135deg, rgba(138, 154, 126, 0.15), rgba(138, 154, 126, 0.08));
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 16px 0;
+            border-left: 3px solid var(--ff-sage);
+        }
+        .warning p {
+            font-size: 0.93rem;
+            margin-bottom: 6px;
+        }
+        /* Link Button */
+        .link-btn {
+            display: inline-block;
+            background: var(--ff-rose);
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 8px 8px 8px 0;
+            transition: background 0.2s;
+        }
+        .link-btn:hover { background: var(--ff-rose-dark); }
+        .link-btn.secondary {
+            background: transparent;
+            color: var(--ff-rose);
+            border: 1.5px solid var(--ff-rose);
+        }
+        .link-btn.secondary:hover {
+            background: var(--ff-rose);
+            color: white;
+        }
+        /* Timeline Preview */
+        .timeline-preview {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 4px 16px;
+            margin: 16px 0;
+        }
+        .timeline-preview .time {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--ff-text);
+            text-align: right;
+        }
+        .timeline-preview .event {
+            font-size: 0.9rem;
+            color: var(--ff-text-light);
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(232, 196, 196, 0.3);
+        }
+        .timeline-preview .event:last-child { border-bottom: none; }
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 12px 16px 12px 44px;
+            position: relative;
+            background: rgba(232, 196, 196, 0.08);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 0.93rem;
+        }
+        .checklist li::before {
+            content: '\2610';
+            position: absolute;
+            left: 16px;
+            font-size: 1.1rem;
+            color: var(--ff-rose);
+        }
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            color: var(--ff-rose);
+            font-size: 0.85rem;
+        }
+        .footer .heart { font-size: 1.2rem; }
+        /* Screenshot placeholder */
+        .screenshot {
+            background: linear-gradient(135deg, var(--ff-rose-soft), var(--ff-peach));
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            margin: 16px 0;
+        }
+        /* Responsive */
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.2rem; }
+            .section { padding: 24px 20px; }
+            .greeting { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>FotoFest</h1>
+            <p class="subtitle">INFO FÜR DEN TRAUZEUGEN</p>
+            <div class="divider"></div>
+        </div>
+        <!-- Greeting -->
+        <div class="greeting">
+            <p>Hey Daniel! 👋</p>
+            <p>Hier ist der große Andi. Ich habe ein <strong>Hochzeitsgeschenk</strong> für Jasmin und Andreas gebaut – eine eigene Foto-App und Webseite, über die alle Gäste am Hochzeitstag ihre Fotos teilen können. In Originalqualität, ohne WhatsApp-Komprimierung.</p>
+            <p><strong>Die App und die Webseite sind fertig und bereit zum Testen!</strong> Du kannst alles direkt ausprobieren. Diese Seite erklärt dir alles, damit wir das zusammen koordinieren können. Lies es in Ruhe durch – ich weiß, mit der Zeitverschiebung nach Australien ist Telefonieren schwierig. 😊</p>
+        </div>
+        <!-- Was ist FotoFest? -->
+        <div class="section">
+            <h2>Was ist FotoFest?</h2>
+            <p>Eine <strong>Foto-Sharing-App</strong> als Hochzeitsgeschenk. Statt dass 100 Gäste ihre Fotos per WhatsApp in Gruppen schicken (komprimiert, chaotisch, geht verloren), gibt es eine zentrale Galerie:</p>
+            <ul>
+                <li><strong>iPhone-Gäste</strong> nutzen die native iOS-App (über TestFlight – siehe unten)</li>
+                <li><strong>Android-Gäste</strong> nutzen die Webseite im Browser</li>
+                <li>Alle Fotos landen in <strong>einer gemeinsamen Galerie</strong> in Echtzeit</li>
+                <li>Originalqualität, kein Datenverlust</li>
+                <li>Das Brautpaar bekommt am Ende <strong>alle Fotos</strong> gebündelt</li>
+            </ul>
+            <div class="highlight">
+                <p><strong>Die Webseite ist live:</strong></p>
+                <p>→ <a href="https://fotofest.pelczer.de" style="color: var(--ff-rose); font-weight: 600;">fotofest.pelczer.de</a></p>
+            </div>
+        </div>
+        <!-- Was gibt es? -->
+        <div class="section">
+            <h2>Was gibt es?</h2>
+            <h3>📸 Foto-Galerie</h3>
+            <p>Alle Gäste-Fotos in einem schönen Grid, live aktualisiert. Jeder kann jedes Foto sehen und herunterladen.</p>
+            <h3>🎯 8 Foto-Challenges</h3>
+            <p>Kleine Aufgaben die Gäste zum Fotografieren motivieren:</p>
+            <ul>
+                <li>Selfie mit dem Brautpaar</li>
+                <li>Der schönste Blumenstrauß</li>
+                <li>Zeig uns dein Outfit!</li>
+                <li>Lustigster Moment</li>
+                <li>Auf der Tanzfläche</li>
+                <li>Die verrücktesten Schuhe</li>
+                <li>Der älteste & der jüngste Gast</li>
+                <li>Das beste Essen</li>
+            </ul>
+            <h3>📋 Tagesablauf</h3>
+            <div class="timeline-preview">
+                <span class="time">13:00</span><span class="event">Ankunft der Gäste</span>
+                <span class="time">13:30</span><span class="event">Freie Trauung</span>
+                <span class="time">14:30</span><span class="event">Sektempfang und Gratulation</span>
+                <span class="time">16:00</span><span class="event">Kaffee und Kuchen</span>
+                <span class="time">18:00</span><span class="event">Abendessen</span>
+                <span class="time">21:00</span><span class="event">Hochzeitstanz mit anschließender Party</span>
+                <span class="time">00:00</span><span class="event">Ende der Feier</span>
+            </div>
+        </div>
+        <!-- Wie funktioniert es? -->
+        <div class="section">
+            <h2>Wie funktioniert es?</h2>
+            <p>Am Hochzeitstag stehen auf jedem Tisch kleine Karten mit einem <strong>QR-Code</strong>. Gäste scannen den Code mit ihrem Handy und landen direkt auf der Webseite oder in der App.</p>
+            <h3>Für die Gäste (super einfach)</h3>
+            <ul>
+                <li>QR-Code scannen</li>
+                <li>Namen eingeben + Event-Code <strong>jasmin1605</strong></li>
+                <li>Fotos machen und hochladen</li>
+                <li>Galerie anschauen, Fotos herunterladen</li>
+            </ul>
+            <p>Kein Account, kein Download nötig (außer iPhone-Gäste die die App wollen). Funktioniert direkt im Browser.</p>
+        </div>
+        <!-- Jetzt testen! -->
+        <div class="section">
+            <h2>Jetzt testen!</h2>
+            <p>Alles ist fertig und du kannst es direkt ausprobieren:</p>
+            <h3>📱 iPhone-App testen (TestFlight)</h3>
+            <ul>
+                <li>Installiere die <strong>TestFlight</strong>-App aus dem App Store (kostenlos von Apple)</li>
+                <li>Öffne TestFlight – dort sollte <strong>FotoFest</strong> erscheinen</li>
+                <li>Falls nicht: schreib mir, dann schicke ich dir eine Einladung per E-Mail</li>
+                <li>App installieren → Event-Code <strong>jasmin1605</strong> eingeben → loslegen!</li>
+            </ul>
+            <h3>🌐 Webseite testen (für Android / Desktop)</h3>
+            <div class="highlight">
+                <p><strong>→ <a href="https://fotofest.pelczer.de" style="color: var(--ff-rose); font-weight: 600;">fotofest.pelczer.de</a></strong></p>
+                <p>Event-Code: <strong>jasmin1605</strong></p>
+            </div>
+            <p>Mach ein Testfoto und lad es hoch – du wirst es sofort in der Galerie sehen. Funktioniert auf jedem Gerät mit Browser.</p>
+            <a href="https://fotofest.pelczer.de" class="link-btn" target="_blank">Webseite öffnen</a>
+        </div>
+        <!-- Was ich von dir brauche -->
+        <div class="section">
+            <h2>Was ich brauche</h2>
+            <p>Ich möchte das als Überraschung für das Brautpaar vorbereiten. Dafür brauche ich deine Hilfe bei ein paar Dingen:</p>
+            <ul class="checklist">
+                <li><strong>WLAN in der Location</strong> – Das ist der wichtigste Punkt! Hat die Location WLAN für Gäste? Ohne Internet funktioniert der Foto-Upload nicht. Falls kein WLAN: brauchen wir einen mobilen Hotspot als Backup.</li>
+                <li><strong>QR-Code-Karten auf die Tische</strong> – Ich designe kleine Karten im Hochzeitsstil. Kannst du (oder Elena) die am Tag vor der Hochzeit auf die Tische stellen?</li>
+                <li><strong>Soll es eine Überraschung bleiben?</strong> – Oder soll das Brautpaar vorher Bescheid wissen? Wie siehst du das?</li>
+                <li><strong>Gibt es schon eine Foto-Lösung?</strong> – Hat das Brautpaar schon eine App geplant oder eine Fotobox bestellt? Will nicht doppelt planen.</li>
+                <li><strong>Live-Diashow?</strong> – Optional: Gibt es einen Beamer oder großen Bildschirm in der Location? Dann könnten die Fotos live angezeigt werden.</li>
+            </ul>
+            <div class="warning">
+                <p>⚡ <strong>Das WLAN ist wirklich kritisch.</strong> Bitte klär das als erstes, wenn du Infos zur Location hast. Alles andere können wir lösen – aber ohne Internet steht die App still.</p>
+            </div>
+        </div>
+        <!-- Zeitplan -->
+        <div class="section">
+            <h2>Zeitplan</h2>
+            <ul>
+                <li><strong>✅ Erledigt:</strong> App und Webseite sind fertig und live</li>
+                <li><strong>Jetzt:</strong> Testen! Du, Elena und 2-3 Leute probieren alles aus</li>
+                <li><strong>Ab März:</strong> WLAN und Location-Details klären</li>
+                <li><strong>Anfang Mai:</strong> QR-Code-Karten drucken</li>
+                <li><strong>16. Mai:</strong> 🎉 Hochzeitstag!</li>
+            </ul>
+            <p>Alles steht, kein Stress. Ich wollte dich nur früh genug einweihen.</p>
+        </div>
+        <!-- Technik (kurz) -->
+        <div class="section">
+            <h2>Technik (kurz)</h2>
+            <p>Falls es dich interessiert – du musst das nicht verstehen, nur wissen dass es solide gebaut ist:</p>
+            <ul>
+                <li>Backend läuft auf <strong>Google Firebase</strong> (Server in Frankfurt, DSGVO-konform)</li>
+                <li>Fotos werden verschlüsselt übertragen und gespeichert</li>
+                <li>Nur eingeladene Gäste mit Event-Code haben Zugang</li>
+                <li>Die Webseite bleibt <strong>1 Jahr online</strong> nach der Hochzeit</li>
+                <li>Alle Fotos können jederzeit als ZIP heruntergeladen werden</li>
+            </ul>
+        </div>
+        <!-- Kontakt -->
+        <div class="section">
+            <h2>Fragen?</h2>
+            <p>Schreib mir einfach per WhatsApp oder E-Mail – wann immer es zeitlich passt mit dem Zeitunterschied. Kein Stress, wir haben noch 82 Tage.</p>
+            <p>Ich freue mich auf die Hochzeit! 🥂</p>
+            <p style="margin-top: 16px; font-weight: 600; color: var(--ff-text);">– großer Andi</p>
+        </div>
+        <!-- Footer -->
+        <div class="footer">
+            <p class="heart">♡</p>
+            <p>FotoFest · Jasmin & Andreas · 16. Mai 2026</p>
+        </div>
+    </div>
+</body>
+</html>
